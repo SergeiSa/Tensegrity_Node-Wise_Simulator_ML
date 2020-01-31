@@ -17,6 +17,8 @@ Rods(3, 5) = 1;
 Rods = math_add_symmetric_components(Rods);
 
 robot.Connectivity = Cables + Rods;
+robot.Cables = Cables;
+robot.Rods = Rods;
 
 L_cables = Cables * 0.5;
 L_rods = Rods * 2;
@@ -32,6 +34,16 @@ robot.nodes_position = [    0.8660   -0.8660    0         0.6411   -0.2979   -0.
 robot.nodes_velocity = zeros(3, size(robot.Connectivity, 1));
 robot.nodes_masses = ones(size(robot.Connectivity, 1), 1);
 robot.nodes_dissipation = ones(size(robot.Connectivity, 1), 1);
+
+
+r = [    1         -1        0         0.5   -0.5   -0.5
+         0.5000    0.5000   -1.0000    0     0.5    -0.5
+         0         0         0         1     1       1];
+
+figure_handle = figure('Color', 'w');
+vis_Draw(robot, r);
+axis equal;
+
 
 %%%%
 Res = Simulate(robot, 10, 10^(-3), [1, 2, 3]);
@@ -72,4 +84,18 @@ ylabel_handle = ylabel('$$r_i$$ (m)');
 ylabel_handle.Interpreter = 'latex';
 legend_handle = legend('$$r_1$$', '$$r_2$$', '$$r_1$$');
 legend_handle.Interpreter = 'latex';
+
+figure_handle = figure('Color', 'w');
+h = [];
+for i = 1:50:size(Res.Position, 1)
+    r = [reshape(Res.Position(i, :), [3, 3]), robot.nodes_position(:, 4:6)];
+    hold off;
+    vis_Draw(robot, r);
+    ax = gca;
+    axis equal;
+    ax.XLim = [-1 1];
+    ax.YLim = [-1 1];
+    ax.ZLim = [-1 1.1];
+    drawnow;
+end
 
