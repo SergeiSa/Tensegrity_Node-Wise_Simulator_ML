@@ -1,10 +1,19 @@
+%generates a cylinder between points A and B with a radius "radius"
+%
+%EXAMPLE:
+%
+%A = [1 0 0]; B = [2 2 2]; 
+%cylinder_handle = vis_Cylinder(A, B, 0.2, 'EdgeAlpha', 0, 'FaceColor', [1 0.2 0.1], 'SpecularStrength', 0.3);
 function h = vis_Cylinder(A, B, radius, varargin)
 Parser = inputParser;
-Parser.FunctionName = 'MyFnc';
+Parser.FunctionName = 'vis_Cylinder';
 Parser.addOptional('EdgeAlpha', 0);
 Parser.addOptional('FaceColor', [0.3 0.2 1]);
 Parser.addOptional('SpecularStrength', 0.2);
 Parser.parse(varargin{:});
+
+A = reshape(A, [3, 1]);
+B = reshape(B, [3, 1]);
 
 [cylinder_x, cylinder_y, cylinder_z] = cylinder;
 
