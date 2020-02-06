@@ -11,7 +11,7 @@ Count = floor(Time / dt);
 Res.Position = zeros(Count, n);
 Res.Velocity = zeros(Count, n);
 Res.Time = zeros(Count, 1);
-Res.Thrusts = zeros(Count, m);
+Res.Thrusts = zeros(Count, n);
 
 nodes_position = robot.nodes_position;
 r = robot.nodes_position(:, active_nodes_indices);
@@ -32,8 +32,10 @@ for i = 1:Count
         f_array_dissipation(:, j) = f_array_dissipation(:, j) / dissipation(j);
     end
     
-    norm_f_array = controller_plug();
-    f_rotors = quadrotor_generate_forces_on_active_nodes(rotors_set, nodes_position, norm_f_array, active_nodes_indices);
+%     u = controller_plug();
+    u = quadrotor_Controller_try1(rotors_set);
+    
+    f_rotors = quadrotor_generate_forces_on_active_nodes(rotors_set, nodes_position, u, active_nodes_indices);
     
     a = f_array_elastic + f_array_dissipation + f_rotors;
     for j = 1:length(active_nodes_indices)

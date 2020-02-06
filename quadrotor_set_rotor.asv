@@ -6,8 +6,9 @@ function rotor = quadrotor_set_rotor(main_node_index, second_node_index, Relativ
         n = main_node - second_node;
         
         f = RelativeOrientation*n*norm_f;
+        application_node_index = main_node_index;
     end
 
     rotor.rotor_handle = @rotor_fnc;
-    rotor.application_node_index = main_node_index;
+    rotor.application_node_index = @rotor;
 end
