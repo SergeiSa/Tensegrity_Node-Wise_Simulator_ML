@@ -7,7 +7,7 @@
 % controller_input.K_position
 % controller_input.K_orientation
 % controller_input.betta
-function u = quadrotor_Controller_try1(controller_input)
+function u = quadrotor_Controller_try2(controller_input)
 
 m = length(controller_input.rotors_set);
 application_node_indeces = zeros(m, 1);
@@ -15,7 +15,7 @@ second_node_indeces = zeros(m, 1);
 
 P = zeros(3, m);
 second_node_P = zeros(3, m);
-Direction = zeros(3, m);
+D = zeros(3, m);
 
 for i = 1:length(controller_input.rotors_set)
     application_node_indeces(i) = controller_input.rotors_set{i}.application_node_index;
@@ -24,24 +24,21 @@ for i = 1:length(controller_input.rotors_set)
     P(:, i) = controller_input.r(:, application_node_indeces(i));
     second_node_P(:, i) = controller_input.r(:, second_node_indeces(i));
     
-    Direction(:, i) = P(:, i) - second_node_P(:, i);
-    Direction(:, i) = Direction(:, i) / norm(Direction(:, i));
+    D(:, i) = P(:, i) - second_node_P(:, i);
+    D(:, i) = D(:, i) / norm(D(:, i));
 end
 
-e = sum(Direction, 2);
-e = e / norm(e);
+%%%%%%%%%%%%%%%%%%%%%%%%
+%%% task
+M = [P(1, 1:4)', P(2, 1:4)', ones(4, 1)];
+b = P(3, 1:4)';
 
-% %%%%%%%%%%%%%%%%%%%%%%%%
-% %%% task
-% M = [P(1, 1:4)', P(2, 1:4)', ones(4, 1)];
-% b = P(3, 1:4)';
-% 
-% %k(1)*x + k(2)*y + k(3) = z
-% k = pinv(M) * b;
-% 
-% %normal
-% e = [k(1); k(2); 1];
-% e = e / norm(e);
+%k(1)*x + k(2)*y + k(3) = z
+k = pinv(M) * b;
+
+%normal
+e = [k(1); k(2); 1];
+e = e / norm(e);
 
 rC = get_CoM(controller_input.robot, controller_input.r);
 
@@ -52,17 +49,17 @@ err_axis = err_axis / norm(err_axis);
 error_orientation = err_axis*err_angle;
 
 error_wrench = [error_position; error_orientation];
-% disp(mat2str(round(error_wrench', 2)));
-% disp([mat2str(round(controller_input.desired_normal', 2)), ' ---- ', ...
-%       mat2str(round(e', 2))]);
+disp(mat2str(round(error_wrench', 2)));
+disp([mat2str(round(controller_input.desired_normal', 2)), ' ---- ', ...
+      mat2str(round(e', 2))]);
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 %%% robot position
 
 %thrust torque directions
-Rd = zeros(size(Direction));
-for i = 1:size(Direction, 2)
-    Rd(:, i) = cross((P(:, i) - rC), Direction(:, i));
+Rd = zeros(size(D));
+for i = 1:size(D, 2)
+    Rd(:, i) = cross((P(:, i) - rC), D(:, i));
 end
 
 % G = [0; 0; sum(controller_input.robot.nodes_masses) * controller_input.robot.g; 0;0;0];
@@ -81,14 +78,13 @@ gamma_position = controller_input.K_position * error_position + G;
 % [(2* Rd'*Rd + betta*I),   -D] * [x      ]  =  [2*gamma_orientation'*Rd        ]
 % [ D,                       0]   [lambda']     [gamma_position]
 
-% Direction
+w1 = 1;
+w2 = 1;
+w3 = 1;
 
+ControlMatrix = w1*D'*D + w2*Rd'*Rd + w3*eye(m);
 
-
-
-ControlMatrix = [(2* (Rd'*Rd) + controller_input.betta * eye(m)), -Direction'; Direction, zeros(3, 3)];
-
-solution = pinv(ControlMatrix) * [(2*gamma_orientation'*Rd)'; gamma_position];
+solution = pinv(ControlMatrix) * (gamma_position'*D + gamma_orientation'*Rd)';
 
 u = solution(1:m);
 

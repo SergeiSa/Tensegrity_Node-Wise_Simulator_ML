@@ -1,7 +1,8 @@
 clc; close all; clear;
 
 sim_time = 5;
-Animate = false;
+Animate = true;
+frames_skipped = 400;
 
 k = 16;
 active_nodes_indices = 1:k;
@@ -81,8 +82,8 @@ L_cables = Cables * 0.5;
 L_rods = Rods * 2;
 robot.rest_lengths = L_cables + L_rods;
 
-mu_cables = Cables * 10;
-mu_rods = Rods * 100;
+mu_cables = Cables * 500;
+mu_rods = Rods * 2000;
 robot.stiffness_coef = mu_cables + mu_rods;
 
 nodes_position1 = [-1  1 1.5   1 -1  -1.5;
@@ -103,9 +104,10 @@ robot.nodes_position  = [nodes_position1, nodes_position2, nodes_position3];
 temp = load('quadrotor_data_turtle_initial_position');
 robot.nodes_position = temp.initial_position;
 
-robot.nodes_velocity = zeros(3, size(robot.Connectivity, 1));
-robot.nodes_masses = ones(size(robot.Connectivity, 1), 1);
-robot.nodes_dissipation = ones(size(robot.Connectivity, 1), 1);
+robot.nodes_velocity    = zeros(3, size(robot.Connectivity, 1));
+robot.nodes_masses      = ones (size(robot.Connectivity, 1), 1)*0.01;
+robot.nodes_dissipation = ones (size(robot.Connectivity, 1), 1)*10;
+robot.g = 9.81;
 
 
 rotor_handle1 = quadrotor_set_rotor(1, get_second_node_connected_to_rod(robot, 1), eye(3));
@@ -117,19 +119,40 @@ rotors_set = {rotor_handle1, rotor_handle2, rotor_handle3, rotor_handle4};
 
 %%%%%%%%%%%%%%%%%%%%%%
 %%%%% drawing 
-   
     
-figure_handle = figure('Color', 'w');
-vis_Draw(robot, robot.nodes_position);
-
-axis equal;
+% figure_handle = figure('Color', 'w');
+% vis_Draw(robot, robot.nodes_position);
+% 
+% axis equal;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Res = quadrotor_Simulate(robot, sim_time, 10^(-3), active_nodes_indices, rotors_set);
+Res = quadrotor_Simulate2(robot, sim_time, 10^(-3), active_nodes_indices, rotors_set);
+
+% figure_handle = figure('Color', 'w');
+% plot(Res.Time, Res.CoM, 'LineWidth', 2, 'LineStyle', '-'); hold on;
+% plot(Res.Time, Res.CoM_desired, 'LineWidth', 3, 'LineStyle', ':'); hold on;
+% 
+% grid on; grid minor;
+% ax = gca;
+% ax.GridAlpha = 0.6;
+% ax.LineWidth = 0.5;
+% ax.MinorGridLineStyle = '-';
+% ax.MinorGridAlpha = 0.2;
+% ax.FontName = 'Times New Roman';
+% ax.FontSize = 18;
+% xlabel_handle = xlabel('$$t$$, s');
+% xlabel_handle.Interpreter = 'latex';
+% ylabel_handle = ylabel('$$x_1$$, $$y_1$$, $$z_1$$ (m)');
+% ylabel_handle.Interpreter = 'latex';
+% legend_handle = legend('$$x_1$$ (m)', '$$y_1$$ (m)', '$$z_1$$ (m)');
+% legend_handle.Interpreter = 'latex';
+
 
 figure_handle = figure('Color', 'w');
-plot(Res.Time, Res.Position(:, [1, 2, 3]), 'LineWidth', 2, 'LineStyle', '-'); hold on;
+plot(Res.Time, Res.axis, 'LineWidth', 2, 'LineStyle', '-'); hold on;
+plot(Res.Time, Res.axis_desired, 'LineWidth', 3, 'LineStyle', ':'); hold on;
+
 grid on; grid minor;
 ax = gca;
 ax.GridAlpha = 0.6;
@@ -144,6 +167,7 @@ ylabel_handle = ylabel('$$x_1$$, $$y_1$$, $$z_1$$ (m)');
 ylabel_handle.Interpreter = 'latex';
 legend_handle = legend('$$x_1$$ (m)', '$$y_1$$ (m)', '$$z_1$$ (m)');
 legend_handle.Interpreter = 'latex';
+
 
 
 figure_handle = figure('Color', 'w');
@@ -175,7 +199,7 @@ ax = gca;
 xlim = [min(min(Res.Position(:, (1:k)*3-2 ))) max(max(Res.Position(:,   (1:k)*3-2)))];
 ylim = [min(min(Res.Position(:, (1:k)*3-1 ))) max(max(Res.Position(:,   (1:k)*3-1)))];
 zlim = [min(min(Res.Position(:, (1:k)*3   ))) max(max(Res.Position(:, (1:k)*3 )))];
-for i = 1:50:size(Res.Position, 1)
+for i = 1:frames_skipped:size(Res.Position, 1)
     r = reshape(Res.Position(i, :), [3, size(Res.Position, 2)/3]);
     thrusts = reshape(Res.Thrusts(i, :), [3, size(Res.Thrusts, 2)/3]);
     hold off;

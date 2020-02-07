@@ -7,7 +7,7 @@
 % controller_input.K_position
 % controller_input.K_orientation
 % controller_input.betta
-function u = quadrotor_Controller_try1(controller_input)
+function u = quadrotor_Controller_try3(controller_input)
 
 m = length(controller_input.rotors_set);
 application_node_indeces = zeros(m, 1);
@@ -28,20 +28,17 @@ for i = 1:length(controller_input.rotors_set)
     Direction(:, i) = Direction(:, i) / norm(Direction(:, i));
 end
 
-e = sum(Direction, 2);
-e = e / norm(e);
+%%%%%%%%%%%%%%%%%%%%%%%%
+%%% task
+M = [P(1, 1:4)', P(2, 1:4)', ones(4, 1)];
+b = P(3, 1:4)';
 
-% %%%%%%%%%%%%%%%%%%%%%%%%
-% %%% task
-% M = [P(1, 1:4)', P(2, 1:4)', ones(4, 1)];
-% b = P(3, 1:4)';
-% 
-% %k(1)*x + k(2)*y + k(3) = z
-% k = pinv(M) * b;
-% 
-% %normal
-% e = [k(1); k(2); 1];
-% e = e / norm(e);
+%k(1)*x + k(2)*y + k(3) = z
+k = pinv(M) * b;
+
+%normal
+e = [k(1); k(2); 1];
+e = e / norm(e);
 
 rC = get_CoM(controller_input.robot, controller_input.r);
 
@@ -83,14 +80,15 @@ gamma_position = controller_input.K_position * error_position + G;
 
 % Direction
 
+w = 1;
+ControlMatrix = Direction'*Direction + w*eye(m);
+u = pinv(ControlMatrix) * (gamma_position'*Direction)';
 
-
-
-ControlMatrix = [(2* (Rd'*Rd) + controller_input.betta * eye(m)), -Direction'; Direction, zeros(3, 3)];
-
-solution = pinv(ControlMatrix) * [(2*gamma_orientation'*Rd)'; gamma_position];
-
-u = solution(1:m);
+% ControlMatrix = [(2* (Rd'*Rd) + controller_input.betta * eye(m)), -Direction'; Direction, zeros(3, 3)];
+% 
+% solution = pinv(ControlMatrix) * [(2*gamma_orientation'*Rd)'; gamma_position];
+% 
+% u = solution(1:m);
 
 % ControlMatrix = [D; Rd];
 % u = pinv(ControlMatrix)* (controller_input.K * error_wrench + G);

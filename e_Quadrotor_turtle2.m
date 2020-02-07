@@ -1,6 +1,6 @@
 clc; close all; clear;
 
-sim_time = 5;
+sim_time = 10;
 Animate = true;
 frames_skipped = 400;
 
@@ -106,24 +106,28 @@ robot.nodes_position = temp.initial_position;
 
 robot.nodes_velocity    = zeros(3, size(robot.Connectivity, 1));
 robot.nodes_masses      = ones (size(robot.Connectivity, 1), 1)*0.01;
-robot.nodes_dissipation = ones (size(robot.Connectivity, 1), 1)*10;
+robot.nodes_dissipation = ones (size(robot.Connectivity, 1), 1)*1;
 robot.g = 9.81;
-
+robot.g = 0;
 
 rotor_handle1 = quadrotor_set_rotor(1, get_second_node_connected_to_rod(robot, 1), eye(3));
 rotor_handle2 = quadrotor_set_rotor(2, get_second_node_connected_to_rod(robot, 2), eye(3));
 rotor_handle3 = quadrotor_set_rotor(4, get_second_node_connected_to_rod(robot, 4), eye(3));
 rotor_handle4 = quadrotor_set_rotor(5, get_second_node_connected_to_rod(robot, 5), eye(3));
+rotor_handle5 = quadrotor_set_rotor(3, get_second_node_connected_to_rod(robot, 3), eye(3));
+rotor_handle6 = quadrotor_set_rotor(7, get_second_node_connected_to_rod(robot, 7), eye(3));
+rotor_handle7 = quadrotor_set_rotor(8, get_second_node_connected_to_rod(robot, 8), eye(3));
      
-rotors_set = {rotor_handle1, rotor_handle2, rotor_handle3, rotor_handle4};
+rotors_set = {rotor_handle1, rotor_handle2, rotor_handle3, rotor_handle4 ...
+    rotor_handle5, rotor_handle6, rotor_handle7};
 
 %%%%%%%%%%%%%%%%%%%%%%
 %%%%% drawing 
     
-% figure_handle = figure('Color', 'w');
-% vis_Draw(robot, robot.nodes_position);
-% 
-% axis equal;
+figure_handle = figure('Color', 'w');
+vis_Draw(robot, robot.nodes_position);
+
+axis equal;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -132,7 +136,6 @@ Res = quadrotor_Simulate(robot, sim_time, 10^(-3), active_nodes_indices, rotors_
 figure_handle = figure('Color', 'w');
 plot(Res.Time, Res.CoM, 'LineWidth', 2, 'LineStyle', '-'); hold on;
 plot(Res.Time, Res.CoM_desired, 'LineWidth', 3, 'LineStyle', ':'); hold on;
-
 grid on; grid minor;
 ax = gca;
 ax.GridAlpha = 0.6;
