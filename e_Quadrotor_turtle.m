@@ -120,14 +120,14 @@ rotors_set = {rotor_handle1, rotor_handle2, rotor_handle3, rotor_handle4};
 %%%%%%%%%%%%%%%%%%%%%%
 %%%%% drawing 
     
-% figure_handle = figure('Color', 'w');
-% vis_Draw(robot, robot.nodes_position);
-% 
-% axis equal;
+figure_handle = figure('Color', 'w');
+vis_Draw(robot, robot.nodes_position);
+
+axis equal;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Res = quadrotor_Simulate2(robot, sim_time, 10^(-3), active_nodes_indices, rotors_set);
+Res = quadrotor_Simulate(robot, sim_time, 10^(-3), active_nodes_indices, rotors_set);
 
 % figure_handle = figure('Color', 'w');
 % plot(Res.Time, Res.CoM, 'LineWidth', 2, 'LineStyle', '-'); hold on;

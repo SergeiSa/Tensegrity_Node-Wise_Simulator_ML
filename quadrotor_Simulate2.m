@@ -73,8 +73,8 @@ for i = 1:Count
     
 %     u = quadrotor_Controller_try1(controller_input);
 %     u = quadrotor_Controller_try2(controller_input);
-%     u = quadrotor_Controller_try3(controller_input);
-    [u, current_axis] = quadrotor_Controller_try4(controller_input);
+    u = quadrotor_Controller_try3(controller_input);
+%     [u, current_axis] = quadrotor_Controller_try4(controller_input);
     
     f_rotors = quadrotor_generate_forces_on_active_nodes(rotors_set, nodes_position, u, active_nodes_indices);
     

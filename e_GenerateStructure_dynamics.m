@@ -7,14 +7,22 @@ Cables(1, 4) = 1;
 Cables(2, 3) = 1;
 Cables(2, 5) = 1;
 Cables(3, 6) = 1;
-Cables = math_add_symmetric_components(Cables);
+
+Cables = Cables + Cables';
+if max(Cables(:)) > 1
+    error('Something went wrong!')
+end
 
 
 Rods = zeros(6, 6);
 Rods(1, 6) = 1;
 Rods(2, 4) = 1;
 Rods(3, 5) = 1;
-Rods = math_add_symmetric_components(Rods);
+
+Rods = Rods + Rods';
+if max(Rods(:)) > 1
+    error('Something went wrong!')
+end
 
 robot.Connectivity = Cables + Rods;
 robot.Cables = Cables;
