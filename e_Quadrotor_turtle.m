@@ -1,6 +1,6 @@
 clc; close all; clear;
 
-sim_time = 5;
+sim_time = 15;
 Animate = true;
 frames_skipped = 400;
 
@@ -149,24 +149,24 @@ Res = quadrotor_Simulate(robot, sim_time, 10^(-3), active_nodes_indices, rotors_
 % legend_handle.Interpreter = 'latex';
 
 
-figure_handle = figure('Color', 'w');
-plot(Res.Time, Res.axis, 'LineWidth', 2, 'LineStyle', '-'); hold on;
-plot(Res.Time, Res.axis_desired, 'LineWidth', 3, 'LineStyle', ':'); hold on;
-
-grid on; grid minor;
-ax = gca;
-ax.GridAlpha = 0.6;
-ax.LineWidth = 0.5;
-ax.MinorGridLineStyle = '-';
-ax.MinorGridAlpha = 0.2;
-ax.FontName = 'Times New Roman';
-ax.FontSize = 18;
-xlabel_handle = xlabel('$$t$$, s');
-xlabel_handle.Interpreter = 'latex';
-ylabel_handle = ylabel('$$x_1$$, $$y_1$$, $$z_1$$ (m)');
-ylabel_handle.Interpreter = 'latex';
-legend_handle = legend('$$x_1$$ (m)', '$$y_1$$ (m)', '$$z_1$$ (m)');
-legend_handle.Interpreter = 'latex';
+% % figure_handle = figure('Color', 'w');
+% % plot(Res.Time, Res.axis, 'LineWidth', 2, 'LineStyle', '-'); hold on;
+% % plot(Res.Time, Res.axis_desired, 'LineWidth', 3, 'LineStyle', ':'); hold on;
+% % 
+% % grid on; grid minor;
+% % ax = gca;
+% % ax.GridAlpha = 0.6;
+% % ax.LineWidth = 0.5;
+% % ax.MinorGridLineStyle = '-';
+% % ax.MinorGridAlpha = 0.2;
+% % ax.FontName = 'Times New Roman';
+% % ax.FontSize = 18;
+% % xlabel_handle = xlabel('$$t$$, s');
+% % xlabel_handle.Interpreter = 'latex';
+% % ylabel_handle = ylabel('$$x_1$$, $$y_1$$, $$z_1$$ (m)');
+% % ylabel_handle.Interpreter = 'latex';
+% % legend_handle = legend('$$x_1$$ (m)', '$$y_1$$ (m)', '$$z_1$$ (m)');
+% % legend_handle.Interpreter = 'latex';
 
 
 
@@ -190,6 +190,35 @@ ylabel_handle = ylabel('$$r_i$$ (m)');
 ylabel_handle.Interpreter = 'latex';
 legend_handle = legend('$$r_1$$', '$$r_2$$', '$$r_1$$');
 legend_handle.Interpreter = 'latex';
+
+
+
+figure_handle = figure('Color', 'w');
+indices = [1, 2, 4, 5];
+for i = 1:length(indices)
+plot(Res.Time, Res.Position(:, (indices(i)*3-2)), ...
+    'LineWidth', 1, 'LineStyle', '-'); hold on;
+plot(Res.Time, Res.Position(:, (indices(i)*3-1)), ...
+    'LineWidth', 2, 'LineStyle', '--'); 
+plot(Res.Time, Res.Position(:, (indices(i)*3-0)), ...
+    'LineWidth', 2.5, 'LineStyle', ':'); 
+end
+grid on; grid minor;
+ax = gca;
+ax.GridAlpha = 0.6;
+ax.LineWidth = 0.5;
+ax.MinorGridLineStyle = '-';
+ax.MinorGridAlpha = 0.2;
+ax.FontName = 'Times New Roman';
+ax.FontSize = 18;
+xlabel_handle = xlabel('$$t$$, s');
+xlabel_handle.Interpreter = 'latex';
+ylabel_handle = ylabel('$$r_i$$ (m)');
+ylabel_handle.Interpreter = 'latex';
+legend_handle = legend('$$r_1$$', '$$r_2$$', '$$r_1$$');
+legend_handle.Interpreter = 'latex';
+
+
 
 if Animate
 figure_handle = figure('Color', 'w');

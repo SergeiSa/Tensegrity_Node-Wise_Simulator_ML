@@ -22,12 +22,12 @@ masses = robot.nodes_masses(active_nodes_indices);
 dissipation = robot.nodes_dissipation(active_nodes_indices);
 
 
-K_position = 15;
+K_position = 115;
 K_orientation = 10;
 
 rC_0 = get_CoM(robot, r);
-rC_f = rC_0+[0.4; 0; 1];
-control_input = quadrotor_get_control_input_fnc(rC_0, rC_f, Time);
+rC_f = rC_0+[0.0; 0; 3];
+control_input = quadrotor_get_control_input_fnc(rC_0, rC_f, Time/3);
 
 for i = 1:Count
     
@@ -63,9 +63,9 @@ for i = 1:Count
     controller_input.betta = 0.1;
     
 %     u = quadrotor_Controller_try1(controller_input);
-%     u = quadrotor_Controller_try2(controller_input);
+    u = quadrotor_Controller_try2(controller_input);
 %     u = quadrotor_Controller_try3(controller_input);
-    u = quadrotor_Controller_try4(controller_input);
+%     u = quadrotor_Controller_try4(controller_input);
     
     f_rotors = quadrotor_generate_forces_on_active_nodes(rotors_set, nodes_position, u, active_nodes_indices);
     

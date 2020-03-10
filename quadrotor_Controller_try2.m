@@ -88,9 +88,11 @@ solution = pinv(ControlMatrix) * (gamma_position'*D + gamma_orientation'*Rd)';
 
 u = solution(1:m);
 
+u(u < 0) = 0;
+
 % ControlMatrix = [D; Rd];
 % u = pinv(ControlMatrix)* (controller_input.K * error_wrench + G);
-1;
+% 1;
 % u = ones(length(rotors_set), 1);
 
 end

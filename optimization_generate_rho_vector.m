@@ -4,6 +4,7 @@ n = (size(C, 1)^2 - size(C, 1)) / 2;
 
 result.map = zeros(n, 2);
 result.rho = sym('rho', [n, 1]);
+assume(result.rho, 'real');
 result.C = sym(zeros(size(C)));
 
 index = 0;
@@ -19,6 +20,8 @@ for i = 1:size(C, 1)
         end
     end
 end
+
+result.C = result.C + result.C';
 
 result.map = result.map(1:index, :);
 result.rho = result.rho(1:index);

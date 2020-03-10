@@ -8,6 +8,7 @@ function h = vis_Cylinder(A, B, radius, varargin)
 Parser = inputParser;
 Parser.FunctionName = 'vis_Cylinder';
 Parser.addOptional('EdgeAlpha', 0);
+Parser.addOptional('FaceAlpha', 1);
 Parser.addOptional('FaceColor', [0.3 0.2 1]);
 Parser.addOptional('SpecularStrength', 0.2);
 Parser.parse(varargin{:});
@@ -52,6 +53,7 @@ cylinder_z = cylinder_z + Center(3);
 
 h = surf(cylinder_x, cylinder_y, cylinder_z, ...
     'EdgeAlpha', Parser.Results.EdgeAlpha, ...
+    'FaceAlpha', Parser.Results.FaceAlpha, ...
     'FaceColor', Parser.Results.FaceColor, ...
     'SpecularStrength', Parser.Results.SpecularStrength);
 
