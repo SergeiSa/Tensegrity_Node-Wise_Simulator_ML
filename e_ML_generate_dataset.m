@@ -1,7 +1,7 @@
 %%% MAIN
 clc; close all; clear;
 
-Count = 100000;
+Count = 100;
 range = 0.1;
 
 rng('shuffle');
