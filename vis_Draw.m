@@ -39,5 +39,6 @@ end
 end
 end
 
+h.node_numbers = vis_node_numbers(robot, r);
 
 end

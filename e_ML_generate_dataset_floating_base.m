@@ -1,13 +1,13 @@
 %%% MAIN
 clc; close all; clear;
 
-Count = 100;
+Count = 200;
 range = 0.1;
 
 rng('shuffle');
 
 %%% Loading
-temp = load('data_robot_ThreePrizm');
+temp = load('data_robot_ThreePrizm_floating');
 robot = temp.robot;
 
 %%% Setup
@@ -18,9 +18,9 @@ initial_ro = robot.rest_lengths;
 rho_handler = optimization_generate_rho_vector_and_function(robot.Cables);
 
 cable_rest_lengths = zeros(Count, m); %X in the dataset
-nodes_position = zeros(Count, length(robot.active_nodes)*3); %Y in the dataset
+nodes_position = zeros(Count, robot.number_of_nodes*3); %Y in the dataset
 
-options = optimoptions('fminunc', 'Display', 'none');
+x0 = robot.nodes_position;
 
 %%% Generation
 for i = 1:Count
@@ -32,11 +32,7 @@ for i = 1:Count
     
     new_ro = initial_ro + rho_handler.function_header(diff);
     
-    get_potential_energy_fnc_handle = ...
-    get_potential_energy_fmincon_wrapper(robot.Connectivity, robot.nodes_position, ...
-                                         robot.stiffness_coef, new_ro, robot.active_nodes);
-                                     
-    x = fminunc(get_potential_energy_fnc_handle, robot.nodes_position(:, robot.active_nodes), options);
+    x = solve_FK_fmincon_floatin_base(robot, new_ro, x0);
 
     cable_rest_lengths(i, :) = optimization_rho_vector_from_matrix(new_ro, rho_handler.map);
     nodes_position(i, :) = x(:);

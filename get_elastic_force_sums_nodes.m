@@ -10,7 +10,12 @@ for i = 1:size(Connectivity, 1)
             
             f = f + stiffness_coef(i, j) * (norm(ri_rj) - rest_lengths(i, j)) * ...
                 ri_rj / norm(ri_rj);
-        end        
+        end  
+        
+        if (~isnumeric(f)) && isnumeric(f_array)
+            f_array = sym(f_array);
+        end
+            
         f_array(:, i) = f; 
     end
 end
