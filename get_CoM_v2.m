@@ -1,8 +1,4 @@
 function CoM = get_CoM_v2(masses, r)
-if size(r, 1) ~= 3
-    nodes = reshape(r, 3, []);
-else
-    nodes = r;
-end
-CoM = nodes * masses / sum(masses);
+r = reshape(r, 3, []);
+CoM = r * reshape(masses, [], 1) / sum(masses);
 end

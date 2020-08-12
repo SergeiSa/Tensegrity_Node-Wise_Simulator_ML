@@ -5,6 +5,8 @@ Parser.addOptional('NodeRadius', 0.1);
 Parser.addOptional('CablesRadius', 0.01);
 Parser.addOptional('RodsRadius', 0.05);
 Parser.addOptional('FaceAlpha', 1);
+Parser.addOptional('text_delta_x', 0.1);
+Parser.addOptional('text_delta_z', 0.1);
 Parser.parse(varargin{:});
 
 node_radius = Parser.Results.NodeRadius;
@@ -39,6 +41,8 @@ end
 end
 end
 
-h.node_numbers = vis_node_numbers(robot, r);
+h.node_numbers = vis_node_numbers(robot, r, ...
+    'text_delta_x', Parser.Results.text_delta_x, ...
+    'text_delta_z', Parser.Results.text_delta_z);
 
 end

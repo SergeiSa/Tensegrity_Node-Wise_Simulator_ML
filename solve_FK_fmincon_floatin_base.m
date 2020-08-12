@@ -11,12 +11,12 @@ node_position_0 = reshape(x0, 3, []);
 potential_energy_header = @(x) get_potential_energy(robot.Connectivity, reshape(x, 3, []), robot.stiffness_coef, ro);
 
 %regurilize for rotations
-reguliration_header = get_floating_base_Z_reguliration('indices', robot.z_regulirization_indices, 'nodes_position', node_position_0);                                     
+regularization_header = get_floating_base_Z_regularization('indices', robot.z_regularization_indices, 'nodes_position', node_position_0);     
         
-cost_weight_potential_eneggy = 1; 
+cost_weight_potential_enegy = 1; 
 cost_weight_regulirization = 0.01;
-cost = @(x) cost_weight_potential_eneggy * potential_energy_header(x) + ...
-            cost_weight_regulirization   * reguliration_header(x);
+cost = @(x) cost_weight_potential_enegy * potential_energy_header(x) + ...
+            cost_weight_regulirization   * regularization_header(x);
 %%%Cost design - end
 
 %%%Constraints design - begin

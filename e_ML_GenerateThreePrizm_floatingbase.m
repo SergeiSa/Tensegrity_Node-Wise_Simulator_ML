@@ -53,7 +53,7 @@ robot.nodes_position = [    0.8660   -0.8660    0         1    -0.5    -0.5
                             0.5000    0.5000   -1.0000    0    -0.866   0.866
                             0         0         0         1    1        1];
                         
-robot.z_regulirization_indices = [4, 5, 6];                      
+robot.z_regularization_indices = [4, 5, 6];                      
                         
 %%%%
 % find stable IC
@@ -95,8 +95,6 @@ save(['data_robot_', robot.RobotName, '.mat'], 'robot')
 
 %%%%%%%%%%%%%%%%%%%%%%
 %%%%% drawing 
-
-p = robot.nodes_position;
 
 figure_handle = figure('Color', 'w');
 vis_Draw(robot, robot.nodes_position, 'FaceAlpha', 0.30);

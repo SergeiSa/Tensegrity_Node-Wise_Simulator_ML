@@ -1,13 +1,14 @@
 %%% MAIN
 clc; close all; clear;
 
-Count = 200;
-range = 0.1;
+Count = 20000;
+range = 0.5;
 
 rng('shuffle');
 
 %%% Loading
-temp = load('data_robot_ThreePrizm_floating');
+% temp = load('data_robot_ThreePrizm_floating');
+temp = load('data_robot_SixBar_floating');
 robot = temp.robot;
 
 %%% Setup
@@ -38,5 +39,5 @@ for i = 1:Count
     nodes_position(i, :) = x(:);
 end
 
-save('data_ML_3Prizm_1', 'cable_rest_lengths', 'nodes_position');
+save('C:\Sergei\NN datasets\2020 Tensegrity\data_ML_SixBar_FB_1', 'cable_rest_lengths', 'nodes_position');
 
