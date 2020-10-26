@@ -79,7 +79,7 @@ L_rods = Rods * 0.5;
 robot.rest_lengths = L_cables + L_rods;
 
 mu_cables = Cables * 10;
-mu_rods = Rods * 100;
+mu_rods = Rods * 1000;
 % mu_cables = Cables * 500;
 % mu_rods = Rods * 2000;
 robot.stiffness_coef = mu_cables + mu_rods;

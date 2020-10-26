@@ -1,13 +1,14 @@
 %%% MAIN
 clc; close all; clear;
 
-Count = 100;
-range = 0.1;
+Count = 1000;
+range = 0.8;
 
 rng('shuffle');
 
-%%% Loading
-temp = load('data_robot_ThreePrizm');
+%%% Loading 
+temp = load('data_robot_SixBar_floating');
+% temp = load('data_robot_ThreePrizm');
 robot = temp.robot;
 
 %%% Setup
@@ -19,6 +20,7 @@ rho_handler = optimization_generate_rho_vector_and_function(robot.Cables);
 
 cable_rest_lengths = zeros(Count, m); %X in the dataset
 nodes_position = zeros(Count, length(robot.active_nodes)*3); %Y in the dataset
+diff_norm = zeros(Count, 1); %Y in the dataset
 
 options = optimoptions('fminunc', 'Display', 'none');
 
@@ -28,7 +30,11 @@ for i = 1:Count
         disp(['calculating ', num2str(i), ' out of ', num2str(Count)]);
     end
 
-    diff = range*(rand(m, 1) - 0.5*ones(m, 1));
+    if i ~= 1
+        diff = range*(rand(m, 1) - 0.5*ones(m, 1));
+    else
+        diff = zeros(m, 1);
+    end
     
     new_ro = initial_ro + rho_handler.function_header(diff);
     
@@ -40,7 +46,8 @@ for i = 1:Count
 
     cable_rest_lengths(i, :) = optimization_rho_vector_from_matrix(new_ro, rho_handler.map);
     nodes_position(i, :) = x(:);
+    diff_norm(i) = norm(diff);
 end
 
-save('data_ML_3Prizm_1', 'cable_rest_lengths', 'nodes_position');
+save('C:\MLData\Tensegrity\data_ML_SixBar_floating_2', 'cable_rest_lengths', 'nodes_position', 'diff_norm');
 

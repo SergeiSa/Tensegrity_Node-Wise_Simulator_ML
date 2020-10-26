@@ -39,9 +39,9 @@ cable_indices = (number_of_nodes*3 + 1):(number_of_nodes*3 + length(rho0));
 %                                                     reshape(x(cable_indices), [], 1) );
         
 weight_nodes_reg = 0.001;
-weight_nodes_active = 1;
+weight_nodes_active = 10;
 weight_cables = 0.01;
-weight_force_violation = 100;
+weight_force_violation = 1000;
 weight_CoM = 0.01;
 
 node_pos_0 = reshape(r0, 3, []);

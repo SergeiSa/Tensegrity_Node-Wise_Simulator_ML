@@ -133,16 +133,16 @@ p = robot.nodes_position;
 
 figure_handle = figure('Color', 'w');
 vis_Draw(robot, robot.nodes_position, 'FaceAlpha', 0.30, ...
-    'NodeRadius', 0.05, 'CablesRadius', 0.003, 'RodsRadius', 0.02);
+    'NodeRadius', 0.05, 'CablesRadius', 0.003, 'RodsRadius', 0.02, 'text_delta_x', 0.01, 'text_delta_z', 0.01);
 
-text_delta_x = 0.01;
-text_delta_z = 0.01;
-
-for i = 1:size(robot.nodes_position, 2)
-    text(p(1, i) + text_delta_x, p(2, i), p(3, i) + text_delta_z, ...
-        num2str(i), ...
-        'FontName', 'Times New Roman', 'FontSize', 12, 'Color', 'k', 'FontWeight', 'bold');
-end
+% text_delta_x = 0.01;
+% text_delta_z = 0.01;
+% 
+% for i = 1:size(robot.nodes_position, 2)
+%     text(p(1, i) + text_delta_x, p(2, i), p(3, i) + text_delta_z, ...
+%         num2str(i), ...
+%         'FontName', 'Times New Roman', 'FontSize', 12, 'Color', 'k', 'FontWeight', 'bold');
+% end
 
 axis equal;
 
